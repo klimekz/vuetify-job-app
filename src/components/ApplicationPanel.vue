@@ -59,7 +59,7 @@ onMounted(() => {
                     <v-text-field variant="solo" label="Phone Number" placeholder="111-111-1111" type="tel" />
                 </v-form>
             </div>
-            <PositionInformation />
+            <positionInformation />
             <br />
             <div class="centerContent">
                 <v-btn v-if="sectionsDisplayed == 1" color="primary"

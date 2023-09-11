@@ -1,11 +1,6 @@
 <script setup>
 import { ref } from "vue"
 import ApplicationPanel from './components/ApplicationPanel.vue';
-const showMenu = ref(false)
-
-function toggleMenu() {
-  showMenu.value = !showMenu.value;
-}
 </script>
 
 <template>
