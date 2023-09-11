@@ -1,5 +1,5 @@
 MVP Javascript application implementing a job application board.
-Mobile-first design, inteded as an exercise in responsiveness.
+Mobile-first design, inteded as an exercise in responsiveness & Vuetify.js.
 
 @author Zack Klimek
 @version 2023-09-11
