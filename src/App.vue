@@ -6,12 +6,10 @@ const showMenu = ref(false)
 function toggleMenu() {
   showMenu.value = !showMenu.value;
 }
-
 </script>
 
 <template>
   <v-app>
-
     <v-app-bar app class="navbar" style="color: grey">
       <v-app-bar-nav-icon class="navicon" @click="toggleMenu" />
       Job Application
@@ -30,16 +28,13 @@ function toggleMenu() {
 <style scoped>
 .v-main {
   margin-top: 9vh;
-  /* height: 1020px; */
   width: 480px;
   margin-bottom: 5vh;
-  /* border: 1px solid red; */
 }
 
 .navbar {
   height: 10vh;
 }
-
 
 body {
   min-height: 100vh;

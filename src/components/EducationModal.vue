@@ -1,4 +1,8 @@
-<template>
+<script setup>
+import { defineProps } from 'vue'
+const props = defineProps(['modal'])
+</script>    
+<template >
     <v-dialog v-model="props.modal">
         <v-card>
             <v-card-title>Education</v-card-title>
@@ -17,10 +21,4 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-</template>
-
-<script setup>
-import { ref, defineProps } from 'vue'
-const props = defineProps(['modal'])
-console.log(props)// console.log(props)
-</script>
+</template >

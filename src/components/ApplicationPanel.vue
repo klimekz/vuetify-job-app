@@ -6,8 +6,6 @@ import PositionInformation from './PositionInformation.vue'
 const expModal = ref(false);
 const eduModal = ref(false);
 
-const options = ["A", "B", "C"]
-
 const FAKE_POSITION = {
     companyName: "Target",
     positionTitle: "Marketing Director",
@@ -30,7 +28,6 @@ onMounted(() => {
 })
 </script>
 
-
 <template>
     <div v-if="sectionsDisplayed == 0">
         <h3>Submitted.</h3>
@@ -43,6 +40,7 @@ onMounted(() => {
         </a>
     </div>
     <br>
+    <!-- Section 1 -->
     <Transition>
         <div v-if="sectionsDisplayed >= 1">
             <div id="candidate-id" class="formContainer">
@@ -69,7 +67,7 @@ onMounted(() => {
             </div>
         </div>
     </Transition>
-    <br />
+    <!-- Section 2 Work & Education Experience, Resume-->
     <div>
         <div v-if="sectionsDisplayed >= 2">
             <div class="startCol">
@@ -119,9 +117,15 @@ onMounted(() => {
                 <v-btn @click="toggleEduModal" color="primary">Add Education</v-btn>
                 <EducationModal :modal="eduModal" />
             </div>
-            <br><br>
+            <br>
             <div class="startCol">
                 <h3>Resume</h3>
+                <br>
+                <div><input type="file" /></div>
+            </div>
+            <br>
+            <div class="startCol">
+                <h3>Cover Letter/CV (Optional)</h3>
                 <br>
                 <div><input type="file" /></div>
             </div>
@@ -133,6 +137,7 @@ onMounted(() => {
         </div>
         <br>
     </div>
+    <!-- Section 3: Self Identification & Veteran Status -->
     <div>
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Self-Identification (Optional)</h3>
