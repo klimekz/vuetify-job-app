@@ -1,9 +1,0 @@
-"filename", "language", "vue", "CSS", "JavaScript", "comment", "blank", "total"
-"/Users/zackklimek/job-app/src/App.vue", "vue", 42, 0, 0, 0, 9, 51
-"/Users/zackklimek/job-app/src/components/ApplicationPanel.vue", "vue", 173, 0, 0, 0, 20, 193
-"/Users/zackklimek/job-app/src/components/EducationModal.vue", "vue", 25, 0, 0, 0, 1, 26
-"/Users/zackklimek/job-app/src/components/ExperienceModal.vue", "vue", 24, 0, 0, 0, 1, 25
-"/Users/zackklimek/job-app/src/components/PositionInformation.vue", "vue", 77, 0, 0, 0, 1, 78
-"/Users/zackklimek/job-app/src/main.js", "JavaScript", 0, 0, 19, 0, 3, 22
-"/Users/zackklimek/job-app/src/style.css", "CSS", 0, 49, 0, 10, 10, 69
-"Total", "-", 341, 49, 19, 10, 45, 464
