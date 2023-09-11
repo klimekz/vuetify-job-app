@@ -77,8 +77,6 @@ onMounted(() => {
                 <p>Please enter your relevant work experience.</p>
             </div>
             <v-card>
-                <br>
-                <v-card-title>{{ FAKE_POSITION.positionTitle }}</v-card-title>
                 <v-row justify="space-between" align="center">
                     <v-col cols="auto">
                         <v-card-subtitle>{{ FAKE_POSITION.companyName }}</v-card-subtitle>
@@ -93,6 +91,16 @@ onMounted(() => {
                         </v-card-text>
                     </v-col>
                 </v-row>
+                <v-card-title class="cardPositionTitle">{{ FAKE_POSITION.positionTitle }}</v-card-title>
+                <v-card-text>
+                    <p>
+                        uere morbi leo urna molestie at elementum eu facilisis sed odio morbi quis commodo
+                        enim eu turpis egestaicitudin tempor id eu nisl nunc mi ipsum faucibus vitae aliquet nec ullamcorper
+                        sit
+                        amet risus nullam eget felis eget nunc
+                    </p>
+                </v-card-text>
+
             </v-card>
             <br>
             <div class="centerContent">
@@ -165,6 +173,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.cardPositionTitle {
+    padding-top: 0;
+}
+
 .centerContent {
     display: flex;
     justify-content: center;
@@ -206,6 +218,8 @@ p {
     padding-top: .3em;
     padding-bottom: .3em;
 }
+
+
 
 h3 {
     margin-bottom: .6em;
