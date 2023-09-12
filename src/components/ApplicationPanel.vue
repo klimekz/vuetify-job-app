@@ -26,7 +26,10 @@ const expModal = ref(false);
 const eduModal = ref(false);
 const workExp = ref([FAKE_POSITION])
 const eduExp = ref([FAKE_SCHOOLING])
-const sectionsDisplayed = ref(0)
+const sectionsDisplayed = ref(0);
+const applicantName = ref("")
+const applicantEmail = ref("")
+const applicantCell = ref("")
 
 function toggleExpModal() {
     expModal.value = true;
@@ -81,13 +84,15 @@ onMounted(() => {
                 </div>
                 <br />
                 <v-form>
-                    <v-text-field variant="solo" label="Full Name" placeholder="Name" />
+                    <v-text-field v-model="applicantName" variant="solo" label="Full Name" placeholder="Name" />
                 </v-form>
                 <v-form>
-                    <v-text-field variant="solo" label="Email Address" placeholder="abc@xyz.com" type="email" />
+                    <v-text-field v-model="applicantEmail" variant="solo" label="Email Address" placeholder="abc@xyz.com"
+                        type="email" />
                 </v-form>
                 <v-form>
-                    <v-text-field variant="solo" label="Phone Number" placeholder="111-111-1111" type="tel" />
+                    <v-text-field v-model="applicantCell" variant="solo" label="Phone Number" placeholder="111-111-1111"
+                        type="tel" />
                 </v-form>
             </div>
             <PositionInformation />
@@ -185,12 +190,46 @@ onMounted(() => {
         </div>
         <div class="startCol" v-if="sectionsDisplayed >= 4">
             <h3>Review</h3>
-            <h5>Display prepared object</h5>
+            <h5>Full Name</h5>
+            <p>{{ applicantName }}</p>
+            <h5>Email</h5>
+            <p>{{ applicantEmail }}</p>
+            <h5>Phone Number</h5>
+            <p>{{ applicantCell }}</p>
+            <br>
+            <h5>Work Experience</h5>
+            <div v-for="p in workExp">
+                <p>{{ p.positionTitle }}, {{ p.companyName }}</p>
+                <div class="textRow">
+                    <p>{{ p.startDate.getMonth() }}/{{ p.startDate.getFullYear() }}</p>-<p>{{ p.endDate.getMonth() }}/{{
+                        p.endDate.getFullYear() }}</p>
+                </div>
+            </div>
+            <br>
+            <h5>Education</h5>
+            <div v-for="e in eduExp">
+                <p>{{ e.degreeLevel }}, {{ e.major }} </p>
+                <p>{{ e.instName }}</p>
+                <div class="textRow">
+                    <p>{{ e.startDate.getMonth() }}/{{ e.startDate.getFullYear() }}</p>-<p>{{ e.endDate.getMonth() }}/{{
+                        e.endDate.getFullYear() }}</p>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="centerContent" v-if="sectionsDisplayed == 4">
+            <v-btn @click="sectionsDisplayed = 0" color="primary">Submit</v-btn>
         </div>
     </div>
 </template>
 
 <style scoped>
+.textRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .cardPositionTitle {
     padding-top: 0;
 }
