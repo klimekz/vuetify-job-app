@@ -6,7 +6,7 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
 <template>
   <v-app>
     <v-app-bar app class="navbar" style="color: grey">
-      <v-app-bar-nav-icon class="navicon" @click="toggleMenu" />
+      <v-app-bar-nav-icon class="navicon" />
       Job Application
     </v-app-bar>
     <v-main app>
@@ -23,7 +23,7 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
 <style scoped>
 .v-main {
   margin-top: 9vh;
-  width: 480px;
+  width: 400px;
   margin-bottom: 5vh;
 }
 

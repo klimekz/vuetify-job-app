@@ -3,24 +3,55 @@ import { onMounted, ref } from 'vue';
 import ExperienceModal from './ExperienceModal.vue';
 import EducationModal from './EducationModal.vue'
 import PositionInformation from './PositionInformation.vue'
-const expModal = ref(false);
-const eduModal = ref(false);
+import ApplicantExpCard from './ApplicantExpCard.vue';
+import ApplicantEduCard from './ApplicantEduCard.vue';
 
 const FAKE_POSITION = {
     companyName: "Target",
     positionTitle: "Marketing Director",
     startDate: new Date(2021, 5),
-    endDate: new Date(2022, 10)
+    endDate: new Date(2022, 10),
+    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite."
 }
 
+const FAKE_SCHOOLING = {
+    instName: "Grand Valley State University",
+    degreeLevel: "Bachelor's Degree",
+    major: "Computer Science",
+    startDate: new Date(2018, 8),
+    endDate: new Date(2023, 4),
+}
+
+const expModal = ref(false);
+const eduModal = ref(false);
+const workExp = ref([FAKE_POSITION])
+const eduExp = ref([FAKE_SCHOOLING])
 const sectionsDisplayed = ref(0)
 
 function toggleExpModal() {
     expModal.value = true;
 }
 
+function setExpFalse() {
+    expModal.value = false
+}
+
+function setEduFalse() {
+    eduModal.value = false
+}
+
 function toggleEduModal() {
     eduModal.value = true;
+}
+
+function appendExp(d) {
+    workExp.value.push(d);
+    setExpFalse();
+}
+
+function appendEdu(d) {
+    eduExp.value.push(d);
+    setEduFalse();
 }
 
 onMounted(() => {
@@ -59,7 +90,7 @@ onMounted(() => {
                     <v-text-field variant="solo" label="Phone Number" placeholder="111-111-1111" type="tel" />
                 </v-form>
             </div>
-            <positionInformation />
+            <PositionInformation />
             <br />
             <div class="centerContent">
                 <v-btn v-if="sectionsDisplayed == 1" color="primary"
@@ -74,36 +105,12 @@ onMounted(() => {
                 <h3>Experience</h3>
                 <p>Please enter your relevant work experience.</p>
             </div>
-            <v-card>
-                <v-row justify="space-between" align="center">
-                    <v-col cols="auto">
-                        <v-card-subtitle>{{ FAKE_POSITION.companyName }}</v-card-subtitle>
-                    </v-col>
-                    <v-col cols="auto">
-                        <v-card-text class="startCol">
-                            {{ FAKE_POSITION.startDate.getMonth() }}/{{ FAKE_POSITION.startDate.getFullYear()
-                            }}
-                            -
-                            {{ FAKE_POSITION.endDate.getMonth() }}/{{ FAKE_POSITION.endDate.getFullYear()
-                            }}
-                        </v-card-text>
-                    </v-col>
-                </v-row>
-                <v-card-title class="cardPositionTitle">{{ FAKE_POSITION.positionTitle }}</v-card-title>
-                <v-card-text>
-                    <p>
-                        uere morbi leo urna molestie at elementum eu facilisis sed odio morbi quis commodo
-                        enim eu turpis egestaicitudin tempor id eu nisl nunc mi ipsum faucibus vitae aliquet nec ullamcorper
-                        sit
-                        amet risus nullam eget felis eget nunc
-                    </p>
-                </v-card-text>
-
-            </v-card>
+            <ApplicantExpCard v-for="p in workExp" :key="p.companyName" :companyName="p.companyName"
+                :positionTitle="p.positionTitle" :desc="p.positionDesc" :startDate="p.startDate" :endDate="p.endDate" />
             <br>
             <div class="centerContent">
                 <v-btn @click="toggleExpModal" color="primary">Add Experience</v-btn>
-                <ExperienceModal :modal="expModal" />
+                <ExperienceModal @save-exp="(d) => appendExp(d)" @cancel-exp="setExpFalse" :modal="expModal" />
             </div>
         </div>
         <br>
@@ -112,21 +119,21 @@ onMounted(() => {
                 <h3>Education</h3>
                 <p>Please enter your relevant educational experience.</p>
             </div>
+            <ApplicantEduCard v-for="e in eduExp" :key="e.startDate" :instName="e.instName" :degreeLevel="e.degreeLevel"
+                :major="e.major" :startDate="e.startDate" :endDate="e.endDate" />
             <br>
             <div class="centerContent">
                 <v-btn @click="toggleEduModal" color="primary">Add Education</v-btn>
-                <EducationModal :modal="eduModal" />
+                <EducationModal @save-edu="(d) => appendEdu(d)" @cancel-edu="setEduFalse" :modal="eduModal" />
             </div>
             <br>
             <div class="startCol">
                 <h3>Resume</h3>
-                <br>
                 <div><input type="file" /></div>
             </div>
             <br>
             <div class="startCol">
                 <h3>Cover Letter/CV (Optional)</h3>
-                <br>
                 <div><input type="file" /></div>
             </div>
         </div>
@@ -139,6 +146,7 @@ onMounted(() => {
     </div>
     <!-- Section 3: Self Identification & Veteran Status -->
     <div>
+        <!-- Self-identification -->
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Self-Identification (Optional)</h3>
             <p>We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within
@@ -156,6 +164,7 @@ onMounted(() => {
             <v-textarea variant="solo" />
         </v-form>
         <br>
+        <!-- Veteran Status -->
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Veteran Status (Optional)</h3>
             <p>We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran
@@ -171,8 +180,12 @@ onMounted(() => {
         <v-select label="Select" variant="solo" v-if="sectionsDisplayed >= 3"
             :items="['I am a veteran', 'I am not a veteran', ' I prefer not to disclose my veteran status']"></v-select>
         <br>
-        <div class="centerContent" v-if="sectionsDisplayed >= 3">
-            <v-btn @click="sectionsDisplayed = 0" color="primary">Submit</v-btn>
+        <div class="centerContent" v-if="sectionsDisplayed == 3">
+            <v-btn @click="sectionsDisplayed = 4" color="primary">Review</v-btn>
+        </div>
+        <div class="startCol" v-if="sectionsDisplayed >= 4">
+            <h3>Review</h3>
+            <h5>Display prepared object</h5>
         </div>
     </div>
 </template>
@@ -190,13 +203,6 @@ onMounted(() => {
 
 .jobTitleText {
     text-align: center;
-}
-
-
-.startCol {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
 }
 
 .spaceBetween {
