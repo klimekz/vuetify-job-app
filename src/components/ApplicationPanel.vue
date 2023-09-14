@@ -3,15 +3,16 @@ import { onMounted, ref } from 'vue';
 import ExperienceModal from './ExperienceModal.vue';
 import EducationModal from './EducationModal.vue'
 import PositionInformation from './PositionInformation.vue'
-import ApplicantExpCard from './ApplicantExpCard.vue';
 import ApplicantEduCard from './ApplicantEduCard.vue';
+import ApplicantExpCard from "./ApplicantExpCard.vue"
+import ReviewCard from "./ReviewCard.vue"
 
 const FAKE_POSITION = {
     companyName: "Target",
     positionTitle: "Marketing Director",
+    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
     startDate: new Date(2021, 5),
-    endDate: new Date(2022, 10),
-    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite."
+    endDate: new Date(2022, 10)
 }
 
 const FAKE_SCHOOLING = {
@@ -26,7 +27,13 @@ const expModal = ref(false);
 const eduModal = ref(false);
 const workExp = ref([FAKE_POSITION])
 const eduExp = ref([FAKE_SCHOOLING])
-const sectionsDisplayed = ref(0)
+const sectionsDisplayed = ref(0);
+
+const applicantName = ref("")
+const applicantEmail = ref("")
+const applicantPhone = ref("")
+const selfIdStatement = ref("")
+const vetStatus = ref("")
 
 function toggleExpModal() {
     expModal.value = true;
@@ -71,34 +78,31 @@ onMounted(() => {
         </a>
     </div>
     <br>
-    <!-- Section 1 -->
+    <!-- Section 1: Identification -->
     <Transition>
         <div v-if="sectionsDisplayed >= 1">
-            <div id="candidate-id" class="formContainer">
+            <form id="candidate-id" class="formContainer" @submit.prevent="sectionsDisplayed = sectionsDisplayed + 1">
                 <div class="startCol">
                     <h3>Welcome.</h3>
                     <p>Please enter your contact information.</p>
                 </div>
                 <br />
-                <v-form>
-                    <v-text-field variant="solo" label="Full Name" placeholder="Name" />
-                </v-form>
-                <v-form>
-                    <v-text-field variant="solo" label="Email Address" placeholder="abc@xyz.com" type="email" />
-                </v-form>
-                <v-form>
-                    <v-text-field variant="solo" label="Phone Number" placeholder="111-111-1111" type="tel" />
-                </v-form>
-            </div>
-            <PositionInformation />
-            <br />
-            <div class="centerContent">
-                <v-btn v-if="sectionsDisplayed == 1" color="primary"
-                    @click="sectionsDisplayed = sectionsDisplayed + 1">Continue</v-btn>
-            </div>
+                <v-text-field id="nameInput" v-model="applicantName" variant="solo" label="Full Name" placeholder="Name"
+                    :rules="[(t) => { return t ? true : 'You must enter a name.' }]" />
+                <v-text-field id="emailInput" v-model="applicantEmail" variant="solo" label="Email Address"
+                    placeholder="abc@xyz.com" type="email"
+                    :rules="[(t) => { return t && t.includes('@') && t.includes('.') ? true : 'You must enter a valid email address.' }]" />
+                <v-text-field id="phoneInput" v-model="applicantPhone" variant="solo" label="Phone Number"
+                    placeholder="111-111-1111" type="tel" />
+                <br />
+                <PositionInformation />
+                <div class="centerContent">
+                    <v-btn v-if="sectionsDisplayed == 1" color="primary" type="submit">Continue</v-btn>
+                </div>
+            </form>
         </div>
     </Transition>
-    <!-- Section 2 Work & Education Experience, Resume-->
+    <!-- Section 2: Work & Education Experience, Resume/Cover/CV -->
     <div>
         <div v-if="sectionsDisplayed >= 2">
             <div class="startCol">
@@ -109,7 +113,7 @@ onMounted(() => {
                 :positionTitle="p.positionTitle" :desc="p.positionDesc" :startDate="p.startDate" :endDate="p.endDate" />
             <br>
             <div class="centerContent">
-                <v-btn @click="toggleExpModal" color="primary">Add Experience</v-btn>
+                <v-btn id="workInputBtn" @click="toggleExpModal" color="primary">Add Experience</v-btn>
                 <ExperienceModal @save-exp="(d) => appendExp(d)" @cancel-exp="setExpFalse" :modal="expModal" />
             </div>
         </div>
@@ -123,24 +127,27 @@ onMounted(() => {
                 :major="e.major" :startDate="e.startDate" :endDate="e.endDate" />
             <br>
             <div class="centerContent">
-                <v-btn @click="toggleEduModal" color="primary">Add Education</v-btn>
+                <v-btn id="educationInputBtn" @click="toggleEduModal" color="primary">Add Education</v-btn>
                 <EducationModal @save-edu="(d) => appendEdu(d)" @cancel-edu="setEduFalse" :modal="eduModal" />
             </div>
             <br>
-            <div class="startCol">
-                <h3>Resume</h3>
-                <div><input type="file" /></div>
-            </div>
-            <br>
-            <div class="startCol">
-                <h3>Cover Letter/CV (Optional)</h3>
-                <div><input type="file" /></div>
-            </div>
-        </div>
-        <br>
-        <div class="centerContent">
-            <v-btn v-if="sectionsDisplayed == 2" color="primary"
-                @click="sectionsDisplayed = sectionsDisplayed + 1">Continue</v-btn>
+            <form @submit.prevent="sectionsDisplayed = sectionsDisplayed + 1">
+                <div class="startCol">
+                    <h3>Resume</h3>
+                    <br>
+                    <input id="resumeInput" type="file" />
+                </div>
+                <br>
+                <div class="startCol">
+                    <h3>Cover Letter/CV (Optional)</h3>
+                    <br>
+                    <input id="coverCVInput" type="file" />
+                </div>
+                <br><br>
+                <div class="centerContent">
+                    <v-btn v-if="sectionsDisplayed == 2" color="primary" type="submit">Continue</v-btn>
+                </div>
+            </form>
         </div>
         <br>
     </div>
@@ -161,7 +168,7 @@ onMounted(() => {
         </div>
         <br>
         <v-form v-if="sectionsDisplayed >= 3">
-            <v-textarea variant="solo" />
+            <v-textarea id="selfIdInput" v-model="selfIdStatement" variant="solo" />
         </v-form>
         <br>
         <!-- Veteran Status -->
@@ -177,20 +184,29 @@ onMounted(() => {
             <p>Please indicate your veteran status by selecting one of the following options:</p>
         </div>
         <br>
-        <v-select label="Select" variant="solo" v-if="sectionsDisplayed >= 3"
+        <v-select id="veteranStatusInput" v-model="vetStatus" label="Select" variant="solo" v-if="sectionsDisplayed >= 3"
             :items="['I am a veteran', 'I am not a veteran', ' I prefer not to disclose my veteran status']"></v-select>
         <br>
         <div class="centerContent" v-if="sectionsDisplayed == 3">
-            <v-btn @click="sectionsDisplayed = 4" color="primary">Review</v-btn>
+            <v-btn @click="sectionsDisplayed = sectionsDisplayed + 1" color="primary">Review</v-btn>
         </div>
-        <div class="startCol" v-if="sectionsDisplayed >= 4">
-            <h3>Review</h3>
-            <h5>Display prepared object</h5>
+    </div>
+    <!-- Section 4: Review -->
+    <div>
+        <ReviewCard v-if="sectionsDisplayed >= 4" :appName="applicantName" :appEmail="applicantEmail"
+            :appPhone="applicantPhone" :exp="workExp" :edu="eduExp" :selfId="selfIdStatement" :vetStatus="vetStatus" />
+        <div class="centerContent" v-if="sectionsDisplayed == 4">
+            <v-btn @click="sectionsDisplayed = 0" color="primary">Submit</v-btn>
         </div>
     </div>
 </template>
 
 <style scoped>
+#resumeInput,
+#coverCVInput {
+    align-self: center;
+}
+
 .cardPositionTitle {
     padding-top: 0;
 }
