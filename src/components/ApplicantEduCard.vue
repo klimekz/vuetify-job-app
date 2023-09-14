@@ -1,21 +1,25 @@
 <script setup>
-import { defineProps } from 'vue';
 const props = defineProps(['instName', 'degreeLevel', 'startDate', 'endDate', 'major']);
 
 </script>
 <template>
     <v-card>
+        End date:{{ props.endDate }}
         <v-row justify="space-between" align="center">
             <v-col cols="auto">
                 <v-card-subtitle>{{ props.degreeLevel }}</v-card-subtitle>
             </v-col>
             <v-col cols="auto">
-                <v-card-text class="startCol">
-                    {{ props.startDate.getMonth() + 1 }}/{{ props.startDate.getFullYear()
-                    }}
-                    -
-                    {{ props.endDate.getMonth() + 1 }}/{{ props.endDate.getFullYear()
-                    }}
+                <v-card-text class="dateRow">
+                    <p>
+                        {{ props.startDate.getMonth() + 1 }}/{{ props.startDate.getFullYear()
+                        }}
+                    </p>
+                    <p>-</p>
+                    <p v-if="props.endDate != ''">
+                        {{ props.endDate.getMonth() + 1 }}/{{ props.endDate.getFullYear()
+                        }}
+                    </p>
                 </v-card-text>
             </v-col>
         </v-row>

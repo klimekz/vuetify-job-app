@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue';
 const props = defineProps(['companyName', 'positionTitle', 'startDate', 'endDate', 'desc']);
 
 </script>
@@ -10,12 +9,16 @@ const props = defineProps(['companyName', 'positionTitle', 'startDate', 'endDate
                 <v-card-subtitle>{{ companyName }}</v-card-subtitle>
             </v-col>
             <v-col cols="auto">
-                <v-card-text class="startCol">
-                    {{ props.startDate.getMonth() + 1 }}/{{ props.startDate.getFullYear()
-                    }}
-                    -
-                    {{ props.endDate.getMonth() + 1 }}/{{ props.endDate.getFullYear()
-                    }}
+                <v-card-text class="dateRow">
+                    <p>
+                        {{ props.startDate.getMonth() + 1 }}/{{ props.startDate.getFullYear()
+                        }}
+                    </p>
+                    <p>-</p>
+                    <p v-if="endDate != ''">
+                        {{ props.endDate.getMonth() + 1 }}/{{ props.endDate.getFullYear()
+                        }}
+                    </p>
                 </v-card-text>
             </v-col>
         </v-row>

@@ -5,9 +5,9 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
 
 <template>
   <v-app>
-    <v-app-bar app class="navbar" style="color: grey">
+    <v-app-bar app class="navbar " style="color: grey">
       <v-app-bar-nav-icon class="navicon" />
-      Job Application
+      Vuetify Job Application
     </v-app-bar>
     <v-main app>
       <ApplicationPanel />
