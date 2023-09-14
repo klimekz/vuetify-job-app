@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import countries from "../data/country_list.json"
+import universities from "../data/uni_list.json"
 const props = defineProps(['modal']);
 const instName = ref("");
 const degreeLevel = ref("");
@@ -10,7 +10,7 @@ const endDate = ref(undefined)
 const inProgress = ref(false);
 const instNotListed = ref(false);
 const educationOptions = ["High School Diploma or Equivalent", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctoral Degree", "Certification/Bootcamp Experience"];
-const usUniOptions = countries.Countries
+const usUniOptions = universities.Universities
 const emit = defineEmits()
 
 function clearInstName() {
@@ -32,6 +32,11 @@ function emitSaveEdu() {
                 'endDate': inProgress.value ? "" : new Date(endDate.value),
             };
             emit('save-edu', educationData);
+            instName.value = ''
+            degreeLevel.value = ''
+            major.value = ''
+            startDate.value = ''
+            endDate.value = ''
         }
     }
 }

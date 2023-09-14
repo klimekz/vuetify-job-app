@@ -4,7 +4,6 @@ const props = defineProps(['instName', 'degreeLevel', 'startDate', 'endDate', 'm
 </script>
 <template>
     <v-card>
-        End date:{{ props.endDate }}
         <v-row justify="space-between" align="center">
             <v-col cols="auto">
                 <v-card-subtitle>{{ props.degreeLevel }}</v-card-subtitle>

@@ -46,10 +46,16 @@ function emitSaveExp() {
                     <v-textarea v-model="experienceText" label="Relevant Experience"></v-textarea>
                 </v-card-text>
                 <v-card-text>
-                    <v-text-field v-model="startDate" type="date" label="Start Date"
-                        :rules="[(t) => { return t ? true : 'You must enter a start date.' }]"></v-text-field>
-                    <v-text-field v-if="!isCurrentPosition" v-model="endDate" type="date" label="End Date"
-                        :rules="[(t) => { return t ? true : 'You must enter an end date.' }]"></v-text-field>
+                    <v-row class="center">
+                        <v-col cols="isCurrentPosition ? 12 : 6">
+                            <v-text-field v-model="startDate" type="date" label="Start Date"
+                                :rules="[(t) => { return t ? true : 'You must enter a start date.' }]"></v-text-field>
+                        </v-col>
+                        <v-col v-if="!isCurrentPosition" cols="6">
+                            <v-text-field v-if="!isCurrentPosition" v-model="endDate" type="date" label="End Date"
+                                :rules="[(t) => { return t ? true : 'You must enter an end date.' }]"></v-text-field>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
                 <div class="center">
                     <v-checkbox v-model="isCurrentPosition" label="Current Position"></v-checkbox>
