@@ -10,6 +10,6 @@ Mock self-identification & veteran status statements provided by ChatGPT. For de
 Vue3 + [Vuetify](https://vuetifyjs.com/en/) + Vite + [Bun](https://www.bun.sh)
 
 
-` git clone [REPO_URL] `
-` bun install `
-` bun dev `
+` git clone [REPO_URL] 
+  bun install 
+  bun dev `
