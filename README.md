@@ -1,4 +1,4 @@
-MVP Javascript application implementing a job application board.
+MVP Vue.js application implementing a job application form.
 Intended as an exercise in responsiveness, mobile-first design & Vuetify.js.
 
 "uni_list.json" is derived from [All The Universities In The World](https://www.kaggle.com/datasets/thedevastator/all-universities-in-the-world) on Kaggle.
