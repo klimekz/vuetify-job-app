@@ -5,16 +5,15 @@
         <div class="descriptionContext formContainer">
             <h3>Job Description</h3>
             <h5>{{ jobLocation }}</h5>
-            <br>
-            <p v-for="p in jobDescTextSet">{{ p }}</p>
+            <p class="contentP" v-for="p in jobDescTextSet">{{ p }}</p>
         </div>
         <div class="descriptionContext formContainer">
             <h3>Responsibilities</h3>
-            <p v-for="p in jobRespTextSet"> {{ p }}</p>
+            <p class="contentP" v-for="p in jobRespTextSet"> {{ p }}</p>
         </div>
         <div class="descriptionContext ">
             <h3>Qualifications</h3>
-            <p v-for="p in jobQualTextSet"> {{ p }}</p>
+            <p class="contentP" v-for="p in jobQualTextSet"> {{ p }}</p>
         </div>
     </div>
 </template>
@@ -30,5 +29,9 @@ const jobQualTextSet = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit
 <style scoped>
 h3 {
     margin-bottom: .6em;
+}
+
+h5 {
+    margin-bottom: 1em;
 }
 </style>

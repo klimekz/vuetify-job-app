@@ -13,30 +13,30 @@ const currentEdu = ref(null);
 const vetStatusContent = ["We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran status is an important part of your background, and we value the skills and experiences that veterans bring to our organization.To support our commitment to diversity and inclusion, we encourage you to voluntarily disclose your veteran status in this section.", "This information is entirely optional and will be kept confidential.Your decision to provide or withhold this information will not impact your application in any way.We use this data solely for affirmative action reporting and to assess our efforts in creating an inclusive workplace.", "Please indicate your veteran status by selecting one of the following options:"]
 const selfIdContent = ["We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within our workforce. Your unique background and experiences are essential to our success, and we invite you to voluntarily self-identify your demographic information.", "This information is strictly confidential and will be used for statistical purposes and diversity initiatives. Your decision to provide or withhold this information will not affect your application in any way. It will help us measure our progress and guide our efforts to build a workplace that reflects the diverse communities we serve.", "Please take a moment to provide this information. Your responses will be used only for internal purposes and will not be shared with hiring managers or influence hiring decisions."]
 
-const FAKE_POSITION = {
-    companyName: "Target",
-    positionTitle: "Marketing Director",
-    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
-    startDate: new Date(2021, 5),
-    endDate: new Date(2022, 10),
-    id: new Date()
-}
+// const FAKE_POSITION = {
+//     companyName: "Target",
+//     positionTitle: "Marketing Director",
+//     positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
+//     startDate: new Date(2021, 5),
+//     endDate: new Date(2022, 10),
+//     id: new Date()
+// }
 
-const FAKE_SCHOOLING = {
-    instName: "Grand Valley State University",
-    degreeLevel: "Bachelor's Degree",
-    major: "Computer Science",
-    startDate: new Date(2018, 8),
-    endDate: new Date(2023, 4),
-    id: new Date()
-}
+// const FAKE_SCHOOLING = {
+//     instName: "Grand Valley State University",
+//     degreeLevel: "Bachelor's Degree",
+//     major: "Computer Science",
+//     startDate: new Date(2018, 8),
+//     endDate: new Date(2023, 4),
+//     id: new Date()
+// }
 
 const expModal = ref(false);
 const expModalContent = ref(false)
 const eduModal = ref(false);
 const eduModalContent = ref(false)
-const workExp = ref([FAKE_POSITION])
-const eduExp = ref([FAKE_SCHOOLING])
+const workExp = ref([])
+const eduExp = ref([])
 const sectionsDisplayed = ref(0);
 
 const applicantName = ref("")
@@ -95,6 +95,12 @@ function saveEdu(d) {
     eduModalContent.value = false
 }
 
+function validateId() {
+    if (applicantName.value != '' && applicantEmail.value.includes('@')
+        && applicantEmail.value.includes('.') && applicantPhone.value != '')
+        sectionsDisplayed.value += 1
+}
+
 function appendEdu(d) {
     eduExp.value.push(d);
     toggleEduModal();
@@ -120,7 +126,7 @@ onMounted(() => {
     <!-- Section 1: Identification -->
     <Transition>
         <div v-if="sectionsDisplayed >= 1">
-            <form id="candidate-id" class="formContainer" @submit.prevent="sectionsDisplayed = sectionsDisplayed + 1">
+            <form id="candidate-id" class="formContainer" @submit.prevent="validateId()">
                 <div class="startCol">
                     <h3>Welcome.</h3>
                     <p>Please enter your contact information.</p>
@@ -199,7 +205,7 @@ onMounted(() => {
         <!-- Self-identification -->
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Self-Identification (Optional)</h3>
-            <p v-for="c in selfIdContent">{{ c }}</p>
+            <p class="contentP" v-for="c in selfIdContent">{{ c }}</p>
         </div>
         <br>
         <v-form v-if="sectionsDisplayed >= 3">
@@ -209,7 +215,7 @@ onMounted(() => {
         <!-- Veteran Status -->
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Veteran Status (Optional)</h3>
-            <p v-for="c in vetStatusContent">{{ c }}</p>
+            <p class="contentP" v-for="c in vetStatusContent">{{ c }}</p>
         </div>
         <br>
         <v-select id="veteranStatusInput" v-model="vetStatus" label="Select" variant="solo" v-if="sectionsDisplayed >= 3"
@@ -230,6 +236,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.contentP {
+    margin-top: .3em;
+    margin-bottom: .6em;
+}
+
 #resumeInput,
 #coverCVInput {
     align-self: center;
@@ -269,8 +280,6 @@ p {
     padding-top: .3em;
     padding-bottom: .3em;
 }
-
-
 
 h3 {
     margin-bottom: .6em;
