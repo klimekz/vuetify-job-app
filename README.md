@@ -8,3 +8,8 @@ Mock self-identification & veteran status statements provided by ChatGPT. For de
 @version 0.1.0 - 2023-09-11
 
 Vue3 + [Vuetify](https://vuetifyjs.com/en/) + Vite + [Bun](https://www.bun.sh)
+
+
+1. `git clone [REPO_URL]`
+2. `bun install`
+3. `bun dev`
