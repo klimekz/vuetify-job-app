@@ -11,5 +11,5 @@ Vue3 + [Vuetify](https://vuetifyjs.com/en/) + Vite + [Bun](https://www.bun.sh)
 
 
 1. `git clone [REPO_URL]`
-2. `bun install` 
+2. `bun install`
 3. `bun dev`
