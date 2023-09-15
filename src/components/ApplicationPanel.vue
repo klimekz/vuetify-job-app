@@ -7,12 +7,16 @@ import ApplicantEduCard from './ApplicantEduCard.vue';
 import ApplicantExpCard from "./ApplicantExpCard.vue"
 import ReviewCard from "./ReviewCard.vue"
 
+const currentExp = ref(null);
+const currentEdu = ref(null)
+
 const FAKE_POSITION = {
     companyName: "Target",
     positionTitle: "Marketing Director",
     positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
     startDate: new Date(2021, 5),
-    endDate: new Date(2022, 10)
+    endDate: new Date(2022, 10),
+    id: new Date()
 }
 
 const FAKE_SCHOOLING = {
@@ -24,6 +28,7 @@ const FAKE_SCHOOLING = {
 }
 
 const expModal = ref(false);
+const expModalContent = ref(false)
 const eduModal = ref(false);
 const workExp = ref([FAKE_POSITION])
 const eduExp = ref([FAKE_SCHOOLING])
@@ -36,11 +41,12 @@ const selfIdStatement = ref("")
 const vetStatus = ref("")
 
 function toggleExpModal() {
-    expModal.value = true;
+    expModal.value = !expModal.value;
 }
 
-function setExpFalse() {
-    expModal.value = false
+function expCardClick(position) {
+    currentExp.value = position
+    expModalContent.value = true
 }
 
 function setEduFalse() {
@@ -53,7 +59,21 @@ function toggleEduModal() {
 
 function appendExp(d) {
     workExp.value.push(d);
-    setExpFalse();
+    workExp.value.sort((a, b) => a.startDate - b.startDate)
+    expModal.value = false;
+}
+
+function saveExp(d) {
+    for (let i = 0; i < workExp.value.length; i++) {
+        if (workExp.value[i].id - d.id == 0) {
+            workExp.value[i] = d
+            expModalContent.value = false
+            currentExp.value = null
+            return
+        }
+    }
+    expModalContent.value = false
+
 }
 
 function appendEdu(d) {
@@ -109,12 +129,14 @@ onMounted(() => {
                 <h3>Experience</h3>
                 <p>Please enter your relevant work experience.</p>
             </div>
-            <ApplicantExpCard v-for="p in workExp" :key="p.companyName" :companyName="p.companyName"
+            <ApplicantExpCard v-for="p in workExp" :key="p.id" @click="expCardClick(p)" :companyName="p.companyName"
                 :positionTitle="p.positionTitle" :desc="p.positionDesc" :startDate="p.startDate" :endDate="p.endDate" />
             <br>
             <div class="centerContent">
                 <v-btn id="workInputBtn" @click="toggleExpModal" color="primary">Add Experience</v-btn>
-                <ExperienceModal @save-exp="(d) => appendExp(d)" @cancel-exp="setExpFalse" :modal="expModal" />
+                <ExperienceModal @save-exp="(d) => appendExp(d)" @cancel-exp="toggleExpModal" :modal="expModal" />
+                <ExperienceModal v-if="expModalContent" @save-exp="(d, i) => saveExp(d)"
+                    @cancel-exp="expModalContent = false" :modal="expModalContent" :startValues="currentExp" />
             </div>
         </div>
         <br>

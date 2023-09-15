@@ -1,36 +1,82 @@
 <script setup>
-import { ref } from 'vue'
-const props = defineProps(['modal'])
+import { computed, ref, onMounted } from 'vue'
+const props = defineProps(['modal', 'startValues'])
 const companyName = ref("")
 const positionTitle = ref("")
 const experienceText = ref("")
 const startDate = ref("")
 const endDate = ref("")
+const id = ref("")
 const isCurrentPosition = ref(false)
 const emit = defineEmits();
+const isEditEnabled = computed(() => props.modal);
 
 function emitCancelExp() {
     emit('cancel-exp', null);
 }
 
+function getStringDate(d) {
+    if (d == "") {
+        isCurrentPosition.value = true;
+        return new Date().getFullYear() + 1 + "-01-01"
+    }
+    else {
+        // Formats as a UTC string to work around timezone errors
+        const dateArray = d.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'UTC'
+        }).split("/")
+        return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
+    }
+}
+
 function emitSaveExp() {
+    console.log("isCurrentPosition", isCurrentPosition.value)
     if (companyName.value != '' && positionTitle.value != '' && startDate.value != '') {
-        if ((endDate.value == "" && isCurrentPosition.value) || (endDate.value != "" && !isCurrentPosition.value)) {
-            const experienceData = {
+        let experienceData = undefined
+        if (isCurrentPosition.value) {
+            experienceData = {
                 companyName: companyName.value,
                 positionTitle: positionTitle.value,
                 positionDesc: experienceText.value,
                 startDate: new Date(startDate.value),
-                endDate: isCurrentPosition ? "" : new Date(endDate.value)
+                endDate: "",
+                id: isEditEnabled ? id.value : new Date()
             }
-            emit('save-exp', experienceData)
-            companyName.value = ""
-            positionTitle.value = ""
-            experienceText.value = ""
-            startDate.value = ""
         }
+        else {
+            experienceData = {
+                companyName: companyName.value,
+                positionTitle: positionTitle.value,
+                positionDesc: experienceText.value,
+                startDate: new Date(startDate.value),
+                endDate: new Date(endDate.value),
+                id: isEditEnabled ? id.value : new Date()
+            }
+        }
+        emit('save-exp', experienceData)
+
+        companyName.value = ""
+        positionTitle.value = ""
+        experienceText.value = ""
+        startDate.value = ""
+        endDate.value = ""
+        isCurrentPosition.value = false
     }
 }
+
+onMounted(() => {
+    if (isEditEnabled && props.startValues != undefined) {
+        companyName.value = props.startValues.companyName
+        positionTitle.value = props.startValues.positionTitle
+        experienceText.value = props.startValues.positionDesc
+        startDate.value = getStringDate(props.startValues.startDate)
+        endDate.value = getStringDate(props.startValues.endDate)
+        id.value = props.startValues.id
+    }
+})
 
 </script>
 <template>
@@ -48,6 +94,8 @@ function emitSaveExp() {
                 <v-card-text>
                     <v-row class="center">
                         <v-col cols="isCurrentPosition ? 12 : 6">
+                            <!-- <v-date-picker></v-date-picker> -->
+
                             <v-text-field v-model="startDate" type="date" label="Start Date"
                                 :rules="[(t) => { return t ? true : 'You must enter a start date.' }]"></v-text-field>
                         </v-col>

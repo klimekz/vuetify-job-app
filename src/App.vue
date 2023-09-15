@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue"
 import ApplicationPanel from './components/ApplicationPanel.vue';
 </script>
 
@@ -12,10 +11,9 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
     <v-main app>
       <ApplicationPanel />
     </v-main>
-    <v-footer app>
-      <span>
-        <h4>2023</h4>
-      </span>
+    <v-footer app class="footerSpan">
+      <h4><a href="https://www.github.com/klimekz">klimekz</a></h4>
+      <h4> S'2023</h4>
     </v-footer>
   </v-app>
 </template>
@@ -25,6 +23,11 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
   margin-top: 9vh;
   width: 400px;
   margin-bottom: 5vh;
+}
+
+.footerSpan {
+  display: flex;
+  justify-content: space-between;
 }
 
 .navbar {

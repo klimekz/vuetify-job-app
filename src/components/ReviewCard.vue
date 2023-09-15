@@ -11,7 +11,7 @@ const props = defineProps(['appName', 'appEmail', 'appPhone', 'exp', 'edu', 'sel
                 <h5 class="reviewElement"><a href="#phoneInput">Phone Number</a></h5>
                 <p>{{ props.appPhone }}</p>
                 <h5 class="reviewElement"><a href="#workInputBtn">Work Experience</a></h5>
-                <div v-for="p in props.exp">
+                <div v-for="p in props.exp" :key="p.startDate">
                         <p>{{ p.positionTitle }}, {{ p.companyName }}</p>
                         <div class="textRow">
                                 <p>{{ p.startDate.getMonth() }}/{{ p.startDate.getFullYear() }}</p>-<p>{{ p.endDate.getMonth()
