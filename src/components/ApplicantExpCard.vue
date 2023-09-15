@@ -1,15 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 const props = defineProps(['companyName', 'positionTitle', 'startDate', 'endDate', 'desc']);
 const inProgress = ref(false)
 
-const renderStartDate = ref("")
-const renderEndDate = ref("")
-
 function formatDate(d) {
-    console.log('current', d)
     if (d === '') {
-        inProgress.value = true
+        return false
     }
     else {
         inProgress.value = false
@@ -21,11 +17,6 @@ function formatDate(d) {
     }
 }
 
-onMounted(() => {
-    renderStartDate.value = formatDate(props.startDate)
-    renderEndDate.value = formatDate(props.endDate)
-})
-
 </script>
 <template>
     <v-card>
@@ -35,9 +26,9 @@ onMounted(() => {
             </v-col>
             <v-col cols="auto">
                 <v-card-text class="dateRow">
-                    <p>{{ renderStartDate }}</p>
+                    <p>{{ formatDate(props.startDate) }}</p>
                     <p>-</p>
-                    <p v-if="!inProgress">{{ renderEndDate }}</p>
+                    <p v-if="!inProgress">{{ formatDate(props.endDate) ? formatDate(props.endDate) : "" }}</p>
                 </v-card-text>
             </v-col>
         </v-row>

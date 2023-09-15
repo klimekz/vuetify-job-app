@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import universities from "../data/uni_list.json"
-const props = defineProps(['modal']);
+const props = defineProps(['modal', 'startValues']);
 const instName = ref("");
 const degreeLevel = ref("");
 const major = ref("")
@@ -9,37 +9,73 @@ const startDate = ref(undefined)
 const endDate = ref(undefined)
 const inProgress = ref(false);
 const instNotListed = ref(false);
+const id = ref("")
 const educationOptions = ["High School Diploma or Equivalent", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctoral Degree", "Certification/Bootcamp Experience"];
 const usUniOptions = universities.Universities
 const emit = defineEmits()
 
-function clearInstName() {
-    instName.value = "";
+const isEditEnabled = computed(() => props.modal)
+
+function emitCancelEdu() {
+    emit('cancel-edu', null);
 }
 
-function emitCloseEdu() {
-    emit('cancel-edu', null);
+function getStringDate(d) {
+    if (d == "") {
+        inProgress.value = true;
+        return new Date().getFullYear() + 1 + "-01-01"
+    }
+    else {
+        // Formats as a UTC string to work around timezone errors
+        const dateArray = d.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'UTC'
+        }).split("/")
+        return dateArray[2] + '-' + dateArray[0] + '-' + dateArray[1]
+    }
 }
 
 function emitSaveEdu() {
     if (instName.value != '' && degreeLevel.value != '' && startDate.value != '') {
-        if (inProgress || (!inProgress.value && endDate.value != "")) {
-            const educationData = {
-                'instName': instName.value,
-                'degreeLevel': degreeLevel.value,
-                'major': major.value,
-                'startDate': new Date(startDate.value),
-                'endDate': inProgress.value ? "" : new Date(endDate.value),
-            };
-            emit('save-edu', educationData);
-            instName.value = ''
-            degreeLevel.value = ''
-            major.value = ''
-            startDate.value = ''
-            endDate.value = ''
+        let educationData = undefined
+        if (inProgress.value) {
+            educationData = {
+                instName: instName.value,
+                degreeLevel: degreeLevel.value,
+                major: major.value,
+                startDate: new Date(startDate.value),
+                endDate: "",
+                id: isEditEnabled.value ? id.value : new Date()
+            }
         }
+        else {
+            educationData = {
+                instName: instName.value,
+                degreeLevel: degreeLevel.value,
+                major: major.value,
+                startDate: new Date(startDate.value),
+                endDate: new Date(endDate.value),
+                id: isEditEnabled.value ? id.value : new Date()
+            }
+        }
+
+        emit('save-edu', educationData)
     }
 }
+
+onMounted(() => {
+    if (isEditEnabled && props.startValues != undefined) {
+        instName.value = props.startValues.instName
+        degreeLevel.value = props.startValues.degreeLevel
+        major.value = props.startValues.major
+        startDate.value = getStringDate(props.startValues.startDate)
+        endDate.value = getStringDate(props.startValues.endDate)
+        id.value = props.startValues.id
+        instNotListed.value = !usUniOptions.some(u => u === props.startValues.instName) ? true : false;
+    }
+})
 
 </script>    
 <template >
@@ -78,11 +114,11 @@ function emitSaveEdu() {
                     <v-checkbox v-model="inProgress" label="In Progress"></v-checkbox>
                 </div>
                 <div class="center">
-                    <v-checkbox @change="clearInstName" v-model="instNotListed" label="Institution Not Listed"></v-checkbox>
+                    <v-checkbox @change="instName = ''" v-model="instNotListed" label="Institution Not Listed"></v-checkbox>
                 </div>
                 <v-card-actions>
                     <v-btn type="submit" color="primary">Save</v-btn>
-                    <v-btn @click="emitCloseEdu">Cancel</v-btn>
+                    <v-btn @click="emitCancelEdu">Cancel</v-btn>
                 </v-card-actions>
             </form>
         </v-card>

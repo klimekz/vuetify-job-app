@@ -1,5 +1,21 @@
 <script setup>
+import { ref } from 'vue';
 const props = defineProps(['instName', 'degreeLevel', 'startDate', 'endDate', 'major']);
+const inProgress = ref(false)
+
+function formatDate(d) {
+    if (d === '') {
+        return false
+    }
+    else {
+        inProgress.value = false
+        return new Date(d).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            timeZone: 'UTC' // Specify the time zone as UTC
+        })
+    }
+}
 
 </script>
 <template>
@@ -8,17 +24,11 @@ const props = defineProps(['instName', 'degreeLevel', 'startDate', 'endDate', 'm
             <v-col cols="auto">
                 <v-card-subtitle>{{ props.degreeLevel }}</v-card-subtitle>
             </v-col>
-            <v-col cols="auto">
+            <v-col cols="auto ">
                 <v-card-text class="dateRow">
-                    <p>
-                        {{ props.startDate.getMonth() + 1 }}/{{ props.startDate.getFullYear()
-                        }}
-                    </p>
+                    <p>{{ formatDate(props.startDate) }}</p>
                     <p>-</p>
-                    <p v-if="props.endDate != ''">
-                        {{ props.endDate.getMonth() + 1 }}/{{ props.endDate.getFullYear()
-                        }}
-                    </p>
+                    <p v-if="!inProgress">{{ formatDate(props.endDate) ? formatDate(props.endDate) : "" }}</p>
                 </v-card-text>
             </v-col>
         </v-row>

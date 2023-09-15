@@ -1,5 +1,19 @@
 <script setup>
 const props = defineProps(['appName', 'appEmail', 'appPhone', 'exp', 'edu', 'selfId', 'vetStatus']);
+
+function formatDate(d) {
+        if (d === '') {
+                return false
+        }
+        else {
+                return new Date(d).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        timeZone: 'UTC' // Specify the time zone as UTC
+                })
+        }
+}
+
 </script>
 <template>
         <div class="startCol">
@@ -14,9 +28,8 @@ const props = defineProps(['appName', 'appEmail', 'appPhone', 'exp', 'edu', 'sel
                 <div v-for="p in props.exp" :key="p.startDate">
                         <p>{{ p.positionTitle }}, {{ p.companyName }}</p>
                         <div class="textRow">
-                                <p>{{ p.startDate.getMonth() }}/{{ p.startDate.getFullYear() }}</p>-<p>{{ p.endDate.getMonth()
-                                }}/{{
-        p.endDate.getFullYear() }}</p>
+                                <p>{{ formatDate(p.startDate) }}</p>-<p>{{ formatDate(p.endDate) ? formatDate(p.endDate) : "" }}
+                                </p>
                         </div>
                 </div>
                 <h5 class="reviewElement"><a href="#educationInputBtn">Education</a></h5>
@@ -24,9 +37,8 @@ const props = defineProps(['appName', 'appEmail', 'appPhone', 'exp', 'edu', 'sel
                         <p>{{ e.degreeLevel }}, {{ e.major }} </p>
                         <p>{{ e.instName }}</p>
                         <div class="textRow">
-                                <p>{{ e.startDate.getMonth() }}/{{ e.startDate.getFullYear() }}</p>-<p>{{ e.endDate.getMonth()
-                                }}/{{
-        e.endDate.getFullYear() }}</p>
+                                <p>{{ formatDate(e.startDate) }}</p>-<p>{{ formatDate(e.endDate) ? formatDate(e.endDate) : "" }}
+                                </p>
                         </div>
                 </div>
                 <h5 class="reviewElement"><a href="selfIdInput">Self Identification</a></h5>

@@ -33,7 +33,6 @@ function getStringDate(d) {
 }
 
 function emitSaveExp() {
-    console.log("isCurrentPosition", isCurrentPosition.value)
     if (companyName.value != '' && positionTitle.value != '' && startDate.value != '') {
         let experienceData = undefined
         if (isCurrentPosition.value) {

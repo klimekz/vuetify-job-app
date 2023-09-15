@@ -2,13 +2,16 @@
 import { onMounted, ref } from 'vue';
 import ExperienceModal from './ExperienceModal.vue';
 import EducationModal from './EducationModal.vue'
-import PositionInformation from './PositionInformation.vue'
 import ApplicantEduCard from './ApplicantEduCard.vue';
 import ApplicantExpCard from "./ApplicantExpCard.vue"
 import ReviewCard from "./ReviewCard.vue"
+import PositionInformation from './PositionInformation.vue';
 
 const currentExp = ref(null);
-const currentEdu = ref(null)
+const currentEdu = ref(null);
+
+const vetStatusContent = ["We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran status is an important part of your background, and we value the skills and experiences that veterans bring to our organization.To support our commitment to diversity and inclusion, we encourage you to voluntarily disclose your veteran status in this section.", "This information is entirely optional and will be kept confidential.Your decision to provide or withhold this information will not impact your application in any way.We use this data solely for affirmative action reporting and to assess our efforts in creating an inclusive workplace.", "Please indicate your veteran status by selecting one of the following options:"]
+const selfIdContent = ["We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within our workforce. Your unique background and experiences are essential to our success, and we invite you to voluntarily self-identify your demographic information.", "This information is strictly confidential and will be used for statistical purposes and diversity initiatives. Your decision to provide or withhold this information will not affect your application in any way. It will help us measure our progress and guide our efforts to build a workplace that reflects the diverse communities we serve.", "Please take a moment to provide this information. Your responses will be used only for internal purposes and will not be shared with hiring managers or influence hiring decisions."]
 
 const FAKE_POSITION = {
     companyName: "Target",
@@ -25,11 +28,13 @@ const FAKE_SCHOOLING = {
     major: "Computer Science",
     startDate: new Date(2018, 8),
     endDate: new Date(2023, 4),
+    id: new Date()
 }
 
 const expModal = ref(false);
 const expModalContent = ref(false)
 const eduModal = ref(false);
+const eduModalContent = ref(false)
 const workExp = ref([FAKE_POSITION])
 const eduExp = ref([FAKE_SCHOOLING])
 const sectionsDisplayed = ref(0);
@@ -49,12 +54,13 @@ function expCardClick(position) {
     expModalContent.value = true
 }
 
-function setEduFalse() {
-    eduModal.value = false
+function eduCardClick(e) {
+    currentEdu.value = e
+    eduModalContent.value = true
 }
 
 function toggleEduModal() {
-    eduModal.value = true;
+    eduModal.value = !eduModal.value;
 }
 
 function appendExp(d) {
@@ -67,18 +73,31 @@ function saveExp(d) {
     for (let i = 0; i < workExp.value.length; i++) {
         if (workExp.value[i].id - d.id == 0) {
             workExp.value[i] = d
-            expModalContent.value = false
             currentExp.value = null
+            expModalContent.value = false
             return
         }
+
     }
     expModalContent.value = false
+}
 
+function saveEdu(d) {
+    for (let i = 0; i < eduExp.value.length; i++) {
+        if (eduExp.value[i].id - d.id == 0) {
+            eduExp.value[i] = d
+            currentEdu.value = null
+            eduModalContent.value = false
+            return
+        } else {
+        }
+    }
+    eduModalContent.value = false
 }
 
 function appendEdu(d) {
     eduExp.value.push(d);
-    setEduFalse();
+    toggleEduModal();
 }
 
 onMounted(() => {
@@ -135,8 +154,8 @@ onMounted(() => {
             <div class="centerContent">
                 <v-btn id="workInputBtn" @click="toggleExpModal" color="primary">Add Experience</v-btn>
                 <ExperienceModal @save-exp="(d) => appendExp(d)" @cancel-exp="toggleExpModal" :modal="expModal" />
-                <ExperienceModal v-if="expModalContent" @save-exp="(d, i) => saveExp(d)"
-                    @cancel-exp="expModalContent = false" :modal="expModalContent" :startValues="currentExp" />
+                <ExperienceModal v-if="expModalContent" @save-exp="(d) => saveExp(d)" @cancel-exp="expModalContent = false"
+                    :modal="expModalContent" :startValues="currentExp" />
             </div>
         </div>
         <br>
@@ -145,12 +164,14 @@ onMounted(() => {
                 <h3>Education</h3>
                 <p>Please enter your relevant educational experience.</p>
             </div>
-            <ApplicantEduCard v-for="e in eduExp" :key="e.startDate" :instName="e.instName" :degreeLevel="e.degreeLevel"
-                :major="e.major" :startDate="e.startDate" :endDate="e.endDate" />
+            <ApplicantEduCard v-for="e in eduExp" :key="e.id" @click="eduCardClick(e)" :instName="e.instName"
+                :degreeLevel="e.degreeLevel" :major="e.major" :startDate="e.startDate" :endDate="e.endDate" />
             <br>
             <div class="centerContent">
                 <v-btn id="educationInputBtn" @click="toggleEduModal" color="primary">Add Education</v-btn>
-                <EducationModal @save-edu="(d) => appendEdu(d)" @cancel-edu="setEduFalse" :modal="eduModal" />
+                <EducationModal @save-edu="(d) => appendEdu(d)" @cancel-edu="toggleEduModal" :modal="eduModal" />
+                <EducationModal v-if="eduModalContent" @save-edu="(d) => saveEdu(d)" @cancel-edu="eduModalContent = false"
+                    :modal="eduModalContent" :startValues="currentEdu" />
             </div>
             <br>
             <form @submit.prevent="sectionsDisplayed = sectionsDisplayed + 1">
@@ -178,15 +199,7 @@ onMounted(() => {
         <!-- Self-identification -->
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Self-Identification (Optional)</h3>
-            <p>We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within
-                our workforce. Your unique background and experiences are essential to our success, and we invite you to
-                voluntarily self-identify your demographic information.</p>
-            <p>This information is strictly confidential and will be used for statistical purposes and diversity
-                initiatives. Your decision to provide or withhold this information will not affect your application in
-                any way. It will help us measure our progress and guide our efforts to build a workplace that reflects
-                the diverse communities we serve.</p>
-            <p>Please take a moment to provide this information. Your responses will be used only for internal purposes
-                and will not be shared with hiring managers or influence hiring decisions.</p>
+            <p v-for="c in selfIdContent">{{ c }}</p>
         </div>
         <br>
         <v-form v-if="sectionsDisplayed >= 3">
@@ -196,14 +209,7 @@ onMounted(() => {
         <!-- Veteran Status -->
         <div class="startCol" v-if="sectionsDisplayed >= 3">
             <h3>Veteran Status (Optional)</h3>
-            <p>We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran
-                status is an important part of your background, and we value the skills and experiences that veterans
-                bring to our organization. To support our commitment to diversity and inclusion, we encourage you to
-                voluntarily disclose your veteran status in this section.</p>
-            <p>This information is entirely optional and will be kept confidential. Your decision to provide or withhold
-                this information will not impact your application in any way. We use this data solely for affirmative
-                action reporting and to assess our efforts in creating an inclusive workplace.</p>
-            <p>Please indicate your veteran status by selecting one of the following options:</p>
+            <p v-for="c in vetStatusContent">{{ c }}</p>
         </div>
         <br>
         <v-select id="veteranStatusInput" v-model="vetStatus" label="Select" variant="solo" v-if="sectionsDisplayed >= 3"
@@ -257,10 +263,6 @@ onMounted(() => {
 
 .v-enter-from {
     opacity: 0;
-}
-
-.formContainer {
-    margin-bottom: 3vh;
 }
 
 p {
