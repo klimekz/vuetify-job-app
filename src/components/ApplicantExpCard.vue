@@ -1,7 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 const props = defineProps(['companyName', 'positionTitle', 'startDate', 'endDate', 'desc']);
 const inProgress = ref(false)
+
+const renderStartDate = ref("")
+const renderEndDate = ref("")
 
 function formatDate(d) {
     console.log('current', d)
@@ -18,6 +21,11 @@ function formatDate(d) {
     }
 }
 
+onMounted(() => {
+    renderStartDate.value = formatDate(props.startDate)
+    renderEndDate.value = formatDate(props.endDate)
+})
+
 </script>
 <template>
     <v-card>
@@ -27,9 +35,9 @@ function formatDate(d) {
             </v-col>
             <v-col cols="auto">
                 <v-card-text class="dateRow">
-                    <p>{{ formatDate(props.startDate) }}</p>
+                    <p>{{ renderStartDate }}</p>
                     <p>-</p>
-                    <p v-if="!inProgress">{{ formatDate(props.endDate) }}</p>
+                    <p v-if="!inProgress">{{ renderEndDate }}</p>
                 </v-card-text>
             </v-col>
         </v-row>
