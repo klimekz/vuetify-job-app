@@ -17,7 +17,6 @@ function emitCancelExp() {
 
 function emitDeleteExp() {
     if (props.startValues != null) {
-        console.log('delete')
         emit('delete-exp', id.value)
     }
 }
@@ -43,6 +42,7 @@ function emitSaveExp() {
     if (companyName.value != '' && positionTitle.value != '' && startDate.value != '') {
         let experienceData = undefined
         if (isCurrentPosition.value) {
+            console.log("if")
             experienceData = {
                 companyName: companyName.value,
                 positionTitle: positionTitle.value,
@@ -53,6 +53,13 @@ function emitSaveExp() {
             }
         }
         else {
+            console.log("else")
+
+            // FIXME: Validation for Adding a start date, not adding end date
+            // and hitting "Save" without "In Progress" where "Invalid Date" sits
+            // on the endDate object. We need to validate that endDate has a value
+            // if !inProgress
+
             experienceData = {
                 companyName: companyName.value,
                 positionTitle: positionTitle.value,
@@ -81,6 +88,9 @@ onMounted(() => {
         startDate.value = getStringDate(props.startValues.startDate)
         endDate.value = getStringDate(props.startValues.endDate)
         id.value = props.startValues.id
+    }
+    else {
+        id.value = new Date()
     }
 })
 

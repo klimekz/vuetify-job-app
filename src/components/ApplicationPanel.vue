@@ -10,6 +10,33 @@ import PositionInformation from './PositionInformation.vue';
 const currentExp = ref(null);
 const currentEdu = ref(null);
 
+const FAKE_POSITION = {
+    companyName: "Target",
+    positionTitle: "Marketing Director",
+    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
+    startDate: new Date(2021, 5),
+    endDate: new Date(2022, 10),
+    id: new Date()
+}
+
+const FAKE_POSITION2 = {
+    companyName: "Taarget",
+    positionTitle: "Marketing Director",
+    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
+    startDate: new Date(2021, 5),
+    endDate: new Date(2022, 10),
+    id: new Date(2023)
+}
+
+const FAKE_SCHOOLING = {
+    instName: "Grand Valley State University",
+    degreeLevel: "Bachelor's Degree",
+    major: "Computer Science",
+    startDate: new Date(2018, 8),
+    endDate: new Date(2023, 4),
+    id: new Date()
+}
+
 const vetStatusContent = ["We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran status is an important part of your background, and we value the skills and experiences that veterans bring to our organization.To support our commitment to diversity and inclusion, we encourage you to voluntarily disclose your veteran status in this section.", "This information is entirely optional and will be kept confidential.Your decision to provide or withhold this information will not impact your application in any way.We use this data solely for affirmative action reporting and to assess our efforts in creating an inclusive workplace.", "Please indicate your veteran status by selecting one of the following options:"]
 const selfIdContent = ["We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within our workforce. Your unique background and experiences are essential to our success, and we invite you to voluntarily self-identify your demographic information.", "This information is strictly confidential and will be used for statistical purposes and diversity initiatives. Your decision to provide or withhold this information will not affect your application in any way. It will help us measure our progress and guide our efforts to build a workplace that reflects the diverse communities we serve.", "Please take a moment to provide this information. Your responses will be used only for internal purposes and will not be shared with hiring managers or influence hiring decisions."]
 
@@ -17,8 +44,8 @@ const expModal = ref(false);
 const expModalContent = ref(false)
 const eduModal = ref(false);
 const eduModalContent = ref(false)
-const workExp = ref([])
-const eduExp = ref([])
+const workExp = ref([FAKE_POSITION, FAKE_POSITION2])
+const eduExp = ref([FAKE_SCHOOLING])
 const sectionsDisplayed = ref(0);
 
 const applicantName = ref("")
@@ -89,14 +116,13 @@ function appendEdu(d) {
 }
 
 function removeEdu(id) {
-    console.log("id")
     const updatedList = eduExp.value.filter((e) => id != e.id)
     eduExp.value = updatedList
     eduModalContent.value = false
 }
 
 function removeExp(id) {
-    const updatedList = workExp.value.filter((e) => id != e.id)
+    const updatedList = workExp.value.filter((e) => id - e.id !== 0)
     workExp.value = updatedList;
     expModalContent.value = false
 }
