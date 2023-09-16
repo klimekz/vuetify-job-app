@@ -53,8 +53,6 @@ function emitSaveExp() {
             }
         }
         else {
-            console.log("else")
-
             // FIXME: Validation for Adding a start date, not adding end date
             // and hitting "Save" without "In Progress" where "Invalid Date" sits
             // on the endDate object. We need to validate that endDate has a value
