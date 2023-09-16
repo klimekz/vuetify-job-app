@@ -15,6 +15,13 @@ function emitCancelExp() {
     emit('cancel-exp', null);
 }
 
+function emitDeleteExp() {
+    if (props.startValues != null) {
+        console.log('delete')
+        emit('delete-exp', id.value)
+    }
+}
+
 function getStringDate(d) {
     if (d == "") {
         isCurrentPosition.value = true;
@@ -93,8 +100,6 @@ onMounted(() => {
                 <v-card-text>
                     <v-row class="center">
                         <v-col cols="isCurrentPosition ? 12 : 6">
-                            <!-- <v-date-picker></v-date-picker> -->
-
                             <v-text-field v-model="startDate" type="date" label="Start Date"
                                 :rules="[(t) => { return t ? true : 'You must enter a start date.' }]"></v-text-field>
                         </v-col>
@@ -109,6 +114,7 @@ onMounted(() => {
                 </div>
                 <v-card-actions>
                     <v-btn color="primary" type="submit">Save</v-btn>
+                    <v-btn v-if="props.startValues != null" @click="emitDeleteExp">Delete</v-btn>
                     <v-btn @click="emitCancelExp">Cancel</v-btn>
                 </v-card-actions>
             </form>
