@@ -15,6 +15,12 @@ function emitCancelExp() {
     emit('cancel-exp', null);
 }
 
+function emitDeleteExp() {
+    if (props.startValues != null) {
+        emit('delete-exp', id.value)
+    }
+}
+
 function getStringDate(d) {
     if (d == "") {
         isCurrentPosition.value = true;
@@ -36,6 +42,7 @@ function emitSaveExp() {
     if (companyName.value != '' && positionTitle.value != '' && startDate.value != '') {
         let experienceData = undefined
         if (isCurrentPosition.value) {
+            console.log("if")
             experienceData = {
                 companyName: companyName.value,
                 positionTitle: positionTitle.value,
@@ -46,6 +53,13 @@ function emitSaveExp() {
             }
         }
         else {
+            console.log("else")
+
+            // FIXME: Validation for Adding a start date, not adding end date
+            // and hitting "Save" without "In Progress" where "Invalid Date" sits
+            // on the endDate object. We need to validate that endDate has a value
+            // if !inProgress
+
             experienceData = {
                 companyName: companyName.value,
                 positionTitle: positionTitle.value,
@@ -75,6 +89,9 @@ onMounted(() => {
         endDate.value = getStringDate(props.startValues.endDate)
         id.value = props.startValues.id
     }
+    else {
+        id.value = new Date()
+    }
 })
 
 </script>
@@ -93,8 +110,6 @@ onMounted(() => {
                 <v-card-text>
                     <v-row class="center">
                         <v-col cols="isCurrentPosition ? 12 : 6">
-                            <!-- <v-date-picker></v-date-picker> -->
-
                             <v-text-field v-model="startDate" type="date" label="Start Date"
                                 :rules="[(t) => { return t ? true : 'You must enter a start date.' }]"></v-text-field>
                         </v-col>
@@ -109,6 +124,7 @@ onMounted(() => {
                 </div>
                 <v-card-actions>
                     <v-btn color="primary" type="submit">Save</v-btn>
+                    <v-btn v-if="props.startValues != null" @click="emitDeleteExp">Delete</v-btn>
                     <v-btn @click="emitCancelExp">Cancel</v-btn>
                 </v-card-actions>
             </form>

@@ -65,6 +65,12 @@ function emitSaveEdu() {
     }
 }
 
+function emitDeleteEdu() {
+    if (props.startValues != null) {
+        emit('delete-edu', id.value)
+    }
+}
+
 onMounted(() => {
     if (isEditEnabled && props.startValues != undefined) {
         instName.value = props.startValues.instName
@@ -118,6 +124,7 @@ onMounted(() => {
                 </div>
                 <v-card-actions>
                     <v-btn type="submit" color="primary">Save</v-btn>
+                    <v-btn v-if="props.startValues != null" @click="emitDeleteEdu">Delete</v-btn>
                     <v-btn @click="emitCancelEdu">Cancel</v-btn>
                 </v-card-actions>
             </form>

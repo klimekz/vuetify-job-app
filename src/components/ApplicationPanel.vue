@@ -10,33 +10,42 @@ import PositionInformation from './PositionInformation.vue';
 const currentExp = ref(null);
 const currentEdu = ref(null);
 
+const FAKE_POSITION = {
+    companyName: "Target",
+    positionTitle: "Marketing Director",
+    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
+    startDate: new Date(2021, 5),
+    endDate: new Date(2022, 10),
+    id: new Date()
+}
+
+const FAKE_POSITION2 = {
+    companyName: "Taarget",
+    positionTitle: "Marketing Director",
+    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
+    startDate: new Date(2021, 5),
+    endDate: new Date(2022, 10),
+    id: new Date(2023)
+}
+
+const FAKE_SCHOOLING = {
+    instName: "Grand Valley State University",
+    degreeLevel: "Bachelor's Degree",
+    major: "Computer Science",
+    startDate: new Date(2018, 8),
+    endDate: new Date(2023, 4),
+    id: new Date()
+}
+
 const vetStatusContent = ["We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran status is an important part of your background, and we value the skills and experiences that veterans bring to our organization.To support our commitment to diversity and inclusion, we encourage you to voluntarily disclose your veteran status in this section.", "This information is entirely optional and will be kept confidential.Your decision to provide or withhold this information will not impact your application in any way.We use this data solely for affirmative action reporting and to assess our efforts in creating an inclusive workplace.", "Please indicate your veteran status by selecting one of the following options:"]
 const selfIdContent = ["We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within our workforce. Your unique background and experiences are essential to our success, and we invite you to voluntarily self-identify your demographic information.", "This information is strictly confidential and will be used for statistical purposes and diversity initiatives. Your decision to provide or withhold this information will not affect your application in any way. It will help us measure our progress and guide our efforts to build a workplace that reflects the diverse communities we serve.", "Please take a moment to provide this information. Your responses will be used only for internal purposes and will not be shared with hiring managers or influence hiring decisions."]
-
-// const FAKE_POSITION = {
-//     companyName: "Target",
-//     positionTitle: "Marketing Director",
-//     positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
-//     startDate: new Date(2021, 5),
-//     endDate: new Date(2022, 10),
-//     id: new Date()
-// }
-
-// const FAKE_SCHOOLING = {
-//     instName: "Grand Valley State University",
-//     degreeLevel: "Bachelor's Degree",
-//     major: "Computer Science",
-//     startDate: new Date(2018, 8),
-//     endDate: new Date(2023, 4),
-//     id: new Date()
-// }
 
 const expModal = ref(false);
 const expModalContent = ref(false)
 const eduModal = ref(false);
 const eduModalContent = ref(false)
-const workExp = ref([])
-const eduExp = ref([])
+const workExp = ref([FAKE_POSITION, FAKE_POSITION2])
+const eduExp = ref([FAKE_SCHOOLING])
 const sectionsDisplayed = ref(0);
 
 const applicantName = ref("")
@@ -106,6 +115,18 @@ function appendEdu(d) {
     toggleEduModal();
 }
 
+function removeEdu(id) {
+    const updatedList = eduExp.value.filter((e) => id != e.id)
+    eduExp.value = updatedList
+    eduModalContent.value = false
+}
+
+function removeExp(id) {
+    const updatedList = workExp.value.filter((e) => id - e.id !== 0)
+    workExp.value = updatedList;
+    expModalContent.value = false
+}
+
 onMounted(() => {
     sectionsDisplayed.value = 1
 })
@@ -160,8 +181,8 @@ onMounted(() => {
             <div class="centerContent">
                 <v-btn id="workInputBtn" @click="toggleExpModal" color="primary">Add Experience</v-btn>
                 <ExperienceModal @save-exp="(d) => appendExp(d)" @cancel-exp="toggleExpModal" :modal="expModal" />
-                <ExperienceModal v-if="expModalContent" @save-exp="(d) => saveExp(d)" @cancel-exp="expModalContent = false"
-                    :modal="expModalContent" :startValues="currentExp" />
+                <ExperienceModal v-if="expModalContent" @save-exp="(d) => saveExp(d)" @delete-exp="(id) => removeExp(id)"
+                    @cancel-exp="expModalContent = false" :modal="expModalContent" :startValues="currentExp" />
             </div>
         </div>
         <br>
@@ -176,8 +197,8 @@ onMounted(() => {
             <div class="centerContent">
                 <v-btn id="educationInputBtn" @click="toggleEduModal" color="primary">Add Education</v-btn>
                 <EducationModal @save-edu="(d) => appendEdu(d)" @cancel-edu="toggleEduModal" :modal="eduModal" />
-                <EducationModal v-if="eduModalContent" @save-edu="(d) => saveEdu(d)" @cancel-edu="eduModalContent = false"
-                    :modal="eduModalContent" :startValues="currentEdu" />
+                <EducationModal v-if="eduModalContent" @save-edu="(d) => saveEdu(d)" @delete-edu="(id) => removeEdu(id)"
+                    @cancel-edu="eduModalContent = false" :modal="eduModalContent" :startValues="currentEdu" />
             </div>
             <br>
             <form @submit.prevent="sectionsDisplayed = sectionsDisplayed + 1">
