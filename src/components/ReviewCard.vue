@@ -53,4 +53,10 @@ function formatDate(d) {
         margin-top: 1em;
         margin-bottom: .3em;
 }
+
+.textRow {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+}
 </style>

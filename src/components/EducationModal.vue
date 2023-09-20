@@ -10,7 +10,7 @@ const endDate = ref(undefined)
 const inProgress = ref(false);
 const instNotListed = ref(false);
 const id = ref("")
-const educationOptions = ["High School Diploma or Equivalent", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctoral Degree", "Certification/Bootcamp Experience"];
+const educationOptions = ["High School Diploma or Equivalent", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctoral Degree", "Certification", "Bootcamp"];
 const usUniOptions = universities.Universities
 const emit = defineEmits()
 

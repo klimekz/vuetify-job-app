@@ -7,36 +7,7 @@ import ApplicantExpCard from "./ApplicantExpCard.vue"
 import ReviewCard from "./ReviewCard.vue"
 import PositionInformation from './PositionInformation.vue';
 
-const currentExp = ref(null);
-const currentEdu = ref(null);
-
-const FAKE_POSITION = {
-    companyName: "Target",
-    positionTitle: "Marketing Director",
-    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
-    startDate: new Date(2021, 5),
-    endDate: new Date(2022, 10),
-    id: new Date()
-}
-
-const FAKE_POSITION2 = {
-    companyName: "Taarget",
-    positionTitle: "Marketing Director",
-    positionDesc: "Consulted consumer data to guide seasonal campaign strategy and direction, Prepared and designed decks for marketing division's showcase for the C-suite.",
-    startDate: new Date(2021, 5),
-    endDate: new Date(2022, 10),
-    id: new Date(2023)
-}
-
-const FAKE_SCHOOLING = {
-    instName: "Grand Valley State University",
-    degreeLevel: "Bachelor's Degree",
-    major: "Computer Science",
-    startDate: new Date(2018, 8),
-    endDate: new Date(2023, 4),
-    id: new Date()
-}
-
+const phonePattern = /^\d{10}$/
 const vetStatusContent = ["We are dedicated to providing equal opportunities to all individuals, including veterans. Your veteran status is an important part of your background, and we value the skills and experiences that veterans bring to our organization.To support our commitment to diversity and inclusion, we encourage you to voluntarily disclose your veteran status in this section.", "This information is entirely optional and will be kept confidential.Your decision to provide or withhold this information will not impact your application in any way.We use this data solely for affirmative action reporting and to assess our efforts in creating an inclusive workplace.", "Please indicate your veteran status by selecting one of the following options:"]
 const selfIdContent = ["We are proud to be an equal opportunity employer, dedicated to fostering diversity and inclusion within our workforce. Your unique background and experiences are essential to our success, and we invite you to voluntarily self-identify your demographic information.", "This information is strictly confidential and will be used for statistical purposes and diversity initiatives. Your decision to provide or withhold this information will not affect your application in any way. It will help us measure our progress and guide our efforts to build a workplace that reflects the diverse communities we serve.", "Please take a moment to provide this information. Your responses will be used only for internal purposes and will not be shared with hiring managers or influence hiring decisions."]
 
@@ -44,9 +15,11 @@ const expModal = ref(false);
 const expModalContent = ref(false)
 const eduModal = ref(false);
 const eduModalContent = ref(false)
-const workExp = ref([FAKE_POSITION, FAKE_POSITION2])
-const eduExp = ref([FAKE_SCHOOLING])
+const workExp = ref([])
+const eduExp = ref([])
 const sectionsDisplayed = ref(0);
+const currentExp = ref(null);
+const currentEdu = ref(null);
 
 const applicantName = ref("")
 const applicantEmail = ref("")
@@ -106,7 +79,8 @@ function saveEdu(d) {
 
 function validateId() {
     if (applicantName.value != '' && applicantEmail.value.includes('@')
-        && applicantEmail.value.includes('.') && applicantPhone.value != '')
+        && applicantEmail.value.includes('.') && applicantPhone.value != '' &&
+        phonePattern.test(applicantPhone.value.replace(/-/g, '')))
         sectionsDisplayed.value += 1
 }
 
@@ -135,7 +109,8 @@ onMounted(() => {
 <template>
     <div v-if="sectionsDisplayed == 0">
         <h3>Submitted.</h3>
-        <p>Insert message pertaining to response time.</p>
+        <p>If your qualifications align with the requirements of this position, our team will contact you for further
+            correspondence.</p>
     </div>
     <div class="jobTitleText" v-if="sectionsDisplayed >= 1">
         <h2>Job Title</h2>
@@ -159,7 +134,8 @@ onMounted(() => {
                     placeholder="abc@xyz.com" type="email"
                     :rules="[(t) => { return t && t.includes('@') && t.includes('.') ? true : 'You must enter a valid email address.' }]" />
                 <v-text-field id="phoneInput" v-model="applicantPhone" variant="solo" label="Phone Number"
-                    placeholder="111-111-1111" type="tel" />
+                    placeholder="111-111-1111" type="tel"
+                    :rules="[(t) => { return phonePattern.test(t.replace(/-/g, '')) ? true : 'You must enter a valid phone number.' }]" />
                 <br />
                 <PositionInformation />
                 <div class="centerContent">

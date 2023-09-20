@@ -5,15 +5,22 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
 <template>
   <v-app>
     <v-app-bar app class="navbar " style="color: grey">
-      <v-app-bar-nav-icon class="navicon" />
-      Vuetify Job Application
+      <!-- <v-row align="center" justify="space-between"> -->
+      <v-toolbar-title>
+        Vuetify Job App
+      </v-toolbar-title>
+      <a href="https://www.github.com/klimekz">
+        <v-btn>
+          <v-icon>mdi-github</v-icon>
+        </v-btn>
+      </a>
+      <!-- </v-row> -->
     </v-app-bar>
     <v-main app>
       <ApplicationPanel />
     </v-main>
     <v-footer app class="footerSpan">
-      <h4><a href="https://www.github.com/klimekz">klimekz</a></h4>
-      <h4> S'2023</h4>
+      <p> S'2023</p>
     </v-footer>
   </v-app>
 </template>
@@ -27,6 +34,7 @@ import ApplicationPanel from './components/ApplicationPanel.vue';
 
 .footerSpan {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
 }
 
